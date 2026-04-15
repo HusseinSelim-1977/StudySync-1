@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PROFILE_DB_URL")
+}
+
+enum StudyPace {
+  SLOW
+  MEDIUM
+  FAST
+}
+
+enum StudyMode {
+  ONLINE
+  INPERSON
+  BOTH
+}
+
+enum StudyStyle {
+  NOTES
+  LISTENING
+  DISCUSSING
+  QUIET
+  OTHER
+}
+
+model Profile {
+  id         String     @id @default(uuid())
+  userId     String     @unique
+  courses    String[]
+  topics     String[]
+  studyPace  StudyPace?
+  studyMode  StudyMode?
+  groupSize  Int?
+  studyStyle StudyStyle?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([userId])
+}

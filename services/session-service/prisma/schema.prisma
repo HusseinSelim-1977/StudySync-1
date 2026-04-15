@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SESSION_DB_URL")
+}
+
+enum SessionType {
+  ONLINE
+  INPERSON
+}
+
+enum SessionStatus {
+  ACTIVE
+  CANCELLED
+}
+
+model Session {
+  id              String               @id @default(uuid())
+  title           String
+  topic           String
+  creatorId       String
+  dateTime        DateTime
+  duration        Int                  // minutes
+  sessionType     SessionType
+  meetingLink     String?
+  location        String?
+  maxParticipants Int
+  status          SessionStatus        @default(ACTIVE)
+  createdAt       DateTime             @default(now())
+  
+  participants    SessionParticipant[] // relationship
+
+  @@index([creatorId])
+}
+
+model SessionParticipant {
+  id        String   @id @default(uuid())
+  session   Session  @relation(fields: [sessionId], references: [id])
+  sessionId String
+  userId    String
+  joinedAt  DateTime @default(now())
+
+  @@unique([sessionId, userId])
+  @@index([userId])
+}

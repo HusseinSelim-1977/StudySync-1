@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("MATCHING_DB_URL")
+}
+
+model UserSnapshot {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  courses           String[]
+  topics            String[]
+  studyPace         String?
+  studyMode         String?
+  groupSize         Int?
+  studyStyle        String?
+  availabilitySlots Json?
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Match {
+  id        String   @id @default(uuid())
+  userId1   String
+  userId2   String
+  score     Int
+  reasons   String[]
+  createdAt DateTime @default(now())
+
+  @@index([userId1])
+  @@index([userId2])
+}

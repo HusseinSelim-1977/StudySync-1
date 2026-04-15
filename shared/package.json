@@ -1,0 +1,9 @@
+{
+  "name": "studysync-shared",
+  "version": "1.0.0",
+  "description": "Shared configurations and kafka factory for StudySync",
+  "main": "index.js",
+  "dependencies": {
+    "kafkajs": "^2.2.4"
+  }
+}

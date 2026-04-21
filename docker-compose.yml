@@ -1,15 +1,29 @@
-version: '3.8'
+version: "3.9"
 
 services:
+
+  # ---------------- POSTGRES ----------------
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # ---------------- ZOOKEEPER ----------------
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
 
+  # ---------------- KAFKA ----------------
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -20,16 +34,19 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 9092 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+      # 🔥 CRITICAL FIXES
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  # ---------------- KAFKA UI ----------------
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
@@ -41,98 +58,99 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
 
+  # ---------------- GATEWAY ----------------
   gateway:
     build:
-      context: ./gateway
+      context: .
+      dockerfile: ./gateway/Dockerfile
     container_name: gateway
     ports:
       - "4000:4000"
-    env_file: .env
-    environment:
-      USER_SERVICE_URL: http://user-service:4001
-      PROFILE_SERVICE_URL: http://profile-service:4002
-      AVAILABILITY_SERVICE_URL: http://availability-service:4003
-      MATCHING_SERVICE_URL: http://matching-service:4004
-      SESSION_SERVICE_URL: http://session-service:4005
-      NOTIFICATION_SERVICE_URL: http://notification-service:4006
-      MESSAGING_SERVICE_URL: http://messaging-service:4007
+    env_file:
+      - ./gateway/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+
+  # ---------------- SERVICES ----------------
 
   user-service:
     build:
-      context: ./services/user-service
+      context: .
+      dockerfile: ./services/user-service/Dockerfile
     container_name: user-service
-    ports:
-      - "4001:4001"
-    env_file: .env
+    env_file:
+      - ./services/user-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   profile-service:
     build:
-      context: ./services/profile-service
+      context: .
+      dockerfile: ./services/profile-service/Dockerfile
     container_name: profile-service
-    ports:
-      - "4002:4002"
-    env_file: .env
+    env_file:
+      - ./services/profile-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   availability-service:
     build:
-      context: ./services/availability-service
+      context: .
+      dockerfile: ./services/availability-service/Dockerfile
     container_name: availability-service
-    ports:
-      - "4003:4003"
-    env_file: .env
+    env_file:
+      - ./services/availability-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   matching-service:
     build:
-      context: ./services/matching-service
+      context: .
+      dockerfile: ./services/matching-service/Dockerfile
     container_name: matching-service
-    ports:
-      - "4004:4004"
-    env_file: .env
+    env_file:
+      - ./services/matching-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   session-service:
     build:
-      context: ./services/session-service
+      context: .
+      dockerfile: ./services/session-service/Dockerfile
     container_name: session-service
-    ports:
-      - "4005:4005"
-    env_file: .env
+    env_file:
+      - ./services/session-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   notification-service:
     build:
-      context: ./services/notification-service
+      context: .
+      dockerfile: ./services/notification-service/Dockerfile
     container_name: notification-service
-    ports:
-      - "4006:4006"
-    env_file: .env
+    env_file:
+      - ./services/notification-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
 
   messaging-service:
     build:
-      context: ./services/messaging-service
+      context: .
+      dockerfile: ./services/messaging-service/Dockerfile
     container_name: messaging-service
     ports:
       - "4007:4007"
-    env_file: .env
+    env_file:
+      - ./services/messaging-service/.env
     depends_on:
-      kafka:
-        condition: service_healthy
+      - kafka
+      - postgres
+
+volumes:
+  postgres_data:

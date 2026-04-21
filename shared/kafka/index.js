@@ -9,53 +9,66 @@ const kafka = new Kafka({
     }
 });
 
-/**
- * Creates and returns a connected Kafka Producer
- * @param {string} clientId
- * @returns {import('kafkajs').Producer}
- */
-const createProducer = (clientId) => {
+// ---------------- PRODUCER ----------------
+
+const createProducer = () => {
     return kafka.producer({
         allowAutoTopicCreation: true
     });
 };
 
-/**
- * Creates and returns a connected Kafka Consumer
- * @param {string} groupId
- * @returns {import('kafkajs').Consumer}
- */
+// ---------------- CONSUMER ----------------
+
 const createConsumer = (groupId) => {
     return kafka.consumer({ groupId });
 };
 
-/**
- * Global Topic Constants
- */
+// ---------------- TOPICS ----------------
+
 const TOPICS = {
+    // -------- REQUESTS (Gateway → Services) --------
+    REGISTER_USER: 'REGISTER_USER',
+    LOGIN_USER: 'LOGIN_USER',
+    GET_USER: 'GET_USER',
+    UPDATE_USER: 'UPDATE_USER',
+
+    GET_PROFILE: 'GET_PROFILE',
+    UPDATE_PROFILE: 'UPDATE_PROFILE',
+
+    GET_AVAILABILITY: 'GET_AVAILABILITY',
+    CREATE_AVAILABILITY: 'CREATE_AVAILABILITY',
+    DELETE_AVAILABILITY: 'DELETE_AVAILABILITY',
+
+    GET_MATCHES: 'GET_MATCHES',
+
+    // -------- RESPONSES --------
+    GATEWAY_RESPONSES: 'GATEWAY_RESPONSES',
+
+    // -------- EVENTS (Service → Service) --------
     USER_REGISTERED: 'USER_REGISTERED',
     PREFERENCES_UPDATED: 'PREFERENCES_UPDATED',
     AVAILABILITY_UPDATED: 'AVAILABILITY_UPDATED',
-    BUDDY_REQUEST_CREATED: 'BUDDY_REQUEST_CREATED',
-    BUDDY_REQUEST_ACCEPTED: 'BUDDY_REQUEST_ACCEPTED',
+    MATCH_FOUND: 'MATCH_FOUND',
+
     SESSION_CREATED: 'SESSION_CREATED',
     SESSION_JOINED: 'SESSION_JOINED',
     SESSION_CANCELLED: 'SESSION_CANCELLED',
-    MATCH_FOUND: 'MATCH_FOUND',
-    NOTIFICATION_CREATED: 'NOTIFICATION_CREATED',
-    MESSAGE_SENT: 'MESSAGE_SENT'
+
+    MESSAGE_SENT: 'MESSAGE_SENT',
+    NOTIFICATION_CREATED: 'NOTIFICATION_CREATED'
 };
 
-/**
- * Utility to format Kafka message payload
- */
-const formatMessage = (eventName, producerService, payload, correlationId) => {
+// ---------------- MESSAGE FORMAT ----------------
+
+const formatMessage = (eventName, producerService, payload, correlationId, replyTo) => {
     const crypto = require('crypto');
+
     return {
         eventName,
         timestamp: new Date().toISOString(),
         producerService,
         correlationId: correlationId || crypto.randomUUID(),
+        replyTo: replyTo || null,
         payload
     };
 };

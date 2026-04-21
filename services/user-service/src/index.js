@@ -1,142 +1,329 @@
-require('dotenv').config({ path: '../../.env' });
-const express = require('express');
+require('dotenv').config();
+
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-// We map out the shared module requiring Kafka Producer
 const path = require('path');
-const { createProducer, TOPICS, formatMessage } = require(path.resolve(__dirname, '../../../shared/kafka'));
+const { Kafka } = require('kafkajs');
 
-const app = express();
-app.use(express.json());
+const {
+  createProducer,
+  createConsumer,
+  TOPICS,
+  formatMessage
+} = require(path.join(__dirname, '../shared/kafka'));
+
 const prisma = new PrismaClient();
-
-const PORT = process.env.USER_SERVICE_PORT || 4001;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
 let kafkaProducer;
+let kafkaConsumer;
 
-// JWT Middleware
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Token missing' });
+// ---------------- KAFKA WAIT ----------------
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.status(401).json({ error: 'Token invalid or expired' });
-        req.user = user;
-        next();
+const waitForKafka = async (retries = 20) => {
+  const kafka = new Kafka({
+    clientId: 'health-check',
+    brokers: ['kafka:9092'],
+  });
+
+  const admin = kafka.admin();
+
+  while (retries) {
+    try {
+      await admin.connect();
+      await admin.disconnect();
+      console.log('✅ Kafka ready');
+      return;
+    } catch {
+      console.log('⏳ Waiting for Kafka...');
+      retries--;
+      await new Promise(res => setTimeout(res, 3000));
+    }
+  }
+
+  throw new Error('Kafka never became ready');
+};
+
+// ---------------- HELPERS ----------------
+
+const sendResponse = async (topic, correlationId, payload) => {
+  if (!topic || !correlationId) {
+    console.warn('⚠️ Missing replyTo or correlationId');
+    return;
+  }
+
+  try {
+    await kafkaProducer.send({
+      topic,
+      messages: [
+        {
+          value: JSON.stringify({ correlationId, payload }),
+        },
+      ],
     });
+
+    console.log('📤 Response sent →', topic);
+  } catch (err) {
+    console.error('❌ Failed to send response:', err.message);
+  }
 };
 
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', service: 'user-service', timestamp: new Date().toISOString() });
-});
+const isValidEmail = (email) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-app.post('/auth/register', async (req, res) => {
-    try {
-        const { email, password, name, university, academicYear, contactEmail, contactPhone } = req.body;
-        if (!email || !password || !name) return res.status(400).json({ error: 'Email, password, and name are required' });
+// ---------------- MESSAGE HANDLER ----------------
 
-        const existingUser = await prisma.user.findUnique({ where: { email } });
-        if (existingUser) return res.status(409).json({ error: 'Email already exists' });
+const handleMessage = async (parsed) => {
+  const { eventName, payload, correlationId, replyTo } = parsed;
 
-        const passwordHash = await bcrypt.hash(password, 10);
-        const user = await prisma.user.create({
-            data: { email, passwordHash, name, university, academicYear, contactEmail, contactPhone }
+  console.log('📥 EVENT:', eventName);
+
+  try {
+    // -------- REGISTER --------
+    if (eventName === TOPICS.REGISTER_USER) {
+      const { email, password, name, university, academicYear, contactEmail, contactPhone } = payload || {};
+
+      if (!email || !password || !name) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Missing required fields',
         });
+      }
 
-        // Publish Kafka Event
-        try {
-            const msg = formatMessage(TOPICS.USER_REGISTERED, 'user-service', { id: user.id, email: user.email, name: user.name });
-            await kafkaProducer.send({
-                topic: TOPICS.USER_REGISTERED,
-                messages: [{ value: JSON.stringify(msg) }]
-            });
-        } catch (kafkaErr) {
-            console.error('Failed to dispatch USER_REGISTERED event', kafkaErr);
-        }
-
-        const { passwordHash: _ph, ...safeUser } = user;
-        res.status(201).json(safeUser);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
-
-        const validPassword = await bcrypt.compare(password, user.passwordHash);
-        if (!validPassword) return res.status(400).json({ error: 'Invalid credentials' });
-
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-
-        res.json({ token, refreshToken, userId: user.id });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.get('/users/:id', authenticateToken, async (req, res) => {
-    try {
-        if (req.params.id !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
-
-        const user = await prisma.user.findUnique({ where: { id: req.params.id } });
-        if (!user) return res.status(404).json({ error: 'Not found' });
-
-        const { passwordHash: _ph, ...safeUser } = user;
-        res.json(safeUser);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.put('/users/:id', authenticateToken, async (req, res) => {
-    try {
-        if (req.params.id !== req.user.id) return res.status(403).json({ error: 'Forbidden' });
-
-        const { name, university, academicYear, contactEmail, contactPhone } = req.body;
-        const user = await prisma.user.update({
-            where: { id: req.params.id },
-            data: { name, university, academicYear, contactEmail, contactPhone }
+      if (!isValidEmail(email)) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Invalid email format',
         });
+      }
 
-        const { passwordHash: _ph, ...safeUser } = user;
-        res.json(safeUser);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+      const existing = await prisma.user.findUnique({ where: { email } });
+
+      if (existing) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Email already exists',
+        });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      const user = await prisma.user.create({
+        data: {
+          email,
+          passwordHash,
+          name,
+          university,
+          academicYear,
+          contactEmail,
+          contactPhone,
+        },
+      });
+
+      await kafkaProducer.send({
+        topic: TOPICS.USER_REGISTERED,
+        messages: [
+          {
+            value: JSON.stringify(
+              formatMessage(TOPICS.USER_REGISTERED, 'user-service', {
+                userId: user.id,
+                email: user.email,
+                name: user.name,
+              })
+            ),
+          },
+        ],
+      });
+
+      const { passwordHash: _, ...safeUser } = user;
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { user: safeUser },
+      });
     }
-});
 
-const startServer = async () => {
-    try {
-        kafkaProducer = createProducer('user-service');
-        // In production we would await connection here. 
-        await kafkaProducer.connect();
+    // -------- LOGIN --------
+    if (eventName === TOPICS.LOGIN_USER) {
+      const { email, password } = payload || {};
 
-        app.listen(PORT, () => console.log(`User Service listening on port ${PORT}`));
-    } catch (error) {
-        console.error('Failed to start server:', error);
-        process.exit(1);
+      if (!email || !password) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Email and password required',
+        });
+      }
+
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (!user) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Invalid credentials',
+        });
+      }
+
+      const valid = await bcrypt.compare(password, user.passwordHash);
+
+      if (!valid) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Invalid credentials',
+        });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '15m' }
+      );
+
+      const refreshToken = jwt.sign(
+        { id: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { token, refreshToken, userId: user.id },
+      });
     }
+
+    // -------- GET USER --------
+    if (eventName === TOPICS.GET_USER) {
+      const { userId } = payload || {};
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'User not found',
+        });
+      }
+
+      const { passwordHash: _, ...safeUser } = user;
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { user: safeUser },
+      });
+    }
+
+    // -------- UPDATE USER --------
+    if (eventName === TOPICS.UPDATE_USER) {
+      const { userId, ...updates } = payload || {};
+
+      if (!userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'userId required',
+        });
+      }
+
+      delete updates.passwordHash;
+      delete updates.email;
+
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data: updates,
+      });
+
+      const { passwordHash: _, ...safeUser } = user;
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { user: safeUser },
+      });
+    }
+
+    console.warn('⚠️ Unknown event:', eventName);
+  } catch (err) {
+    console.error('❌ Handler error:', err);
+
+    return sendResponse(replyTo, correlationId, {
+      success: false,
+      error: err.message,
+    });
+  }
 };
 
-startServer();
+// ---------------- CONSUMER WITH RETRY ----------------
 
-// Graceful Shutdown
+const startConsumer = async () => {
+  while (true) {
+    try {
+      console.log('🔄 Starting consumer...');
+
+      kafkaConsumer = createConsumer('user-service');
+
+      await kafkaConsumer.connect();
+
+      const topics = [
+        TOPICS.REGISTER_USER,
+        TOPICS.LOGIN_USER,
+        TOPICS.GET_USER,
+        TOPICS.UPDATE_USER,
+      ];
+
+      for (const topic of topics) {
+        if (!topic) throw new Error('Topic undefined');
+        await kafkaConsumer.subscribe({ topic, fromBeginning: false });
+      }
+
+      await kafkaConsumer.run({
+        eachMessage: async ({ message }) => {
+          try {
+            const parsed = JSON.parse(message.value.toString());
+            await handleMessage(parsed);
+          } catch (err) {
+            console.error('❌ Invalid message:', err.message);
+          }
+        },
+      });
+
+      console.log('✅ Consumer running');
+      return;
+
+    } catch (err) {
+      console.error('❌ Consumer crashed, retrying...', err.message);
+      await new Promise(res => setTimeout(res, 5000));
+    }
+  }
+};
+
+// ---------------- START ----------------
+
+const start = async () => {
+  console.log('🚀 User service booting...');
+
+  await waitForKafka();
+
+  kafkaProducer = createProducer();
+  await kafkaProducer.connect();
+
+  await startConsumer();
+
+  console.log('✅ User Service Ready');
+};
+
+start().catch(err => {
+  console.error('❌ Fatal startup error:', err);
+  process.exit(1);
+});
+
+// ---------------- SHUTDOWN ----------------
+
 process.on('SIGINT', async () => {
-    await prisma.$disconnect();
-    await kafkaProducer.disconnect();
-    process.exit(0);
+  await prisma.$disconnect();
+  process.exit(0);
 });
+
 process.on('SIGTERM', async () => {
-    await prisma.$disconnect();
-    await kafkaProducer.disconnect();
-    process.exit(0);
+  await prisma.$disconnect();
+  process.exit(0);
 });

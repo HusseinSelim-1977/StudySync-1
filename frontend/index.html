@@ -169,6 +169,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   font-size:22px;font-weight:800;letter-spacing:-0.5px;
   background:linear-gradient(135deg,var(--neo),var(--neo3));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip: text;
   cursor:pointer;margin-right:40px;flex-shrink:0;
   filter:drop-shadow(0 0 12px rgba(0,255,255,0.4));
 }
@@ -226,11 +227,11 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 .mono{font-family:var(--mono);font-size:12px;color:var(--text3);letter-spacing:.5px}
 
 /* Gradient text helpers */
-.t-neo{background:linear-gradient(135deg,var(--neo),var(--neo2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(0,255,255,0.4))}
-.t-purple{background:linear-gradient(135deg,var(--neo3),#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.t-pink{background:linear-gradient(135deg,var(--neo4),#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.t-green{background:linear-gradient(135deg,var(--neo5),#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.t-multi{background:linear-gradient(135deg,var(--neo),var(--neo3),var(--neo4));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.t-neo{background:linear-gradient(135deg,var(--neo),var(--neo2));-webkit-background-clip:text;background-clip: text;;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(0,255,255,0.4))}
+.t-purple{background:linear-gradient(135deg,var(--neo3),#c084fc);-webkit-background-clip:text;background-clip: text;;-webkit-text-fill-color:transparent}
+.t-pink{background:linear-gradient(135deg,var(--neo4),#fb923c);-webkit-background-clip:text;background-clip: text;;-webkit-text-fill-color:transparent}
+.t-green{background:linear-gradient(135deg,var(--neo5),#6ee7b7);-webkit-background-clip:text;background-clip: text;-webkit-text-fill-color:transparent}
+.t-multi{background:linear-gradient(135deg,var(--neo),var(--neo3),var(--neo4));-webkit-background-clip:text;background-clip: text;;-webkit-text-fill-color:transparent}
 
 /* ════════════════════════════════════════════════════════════════
    BUTTONS
@@ -332,6 +333,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   font-family:var(--font);font-size:14px;outline:none;
   width:100%;cursor:pointer;
   -webkit-appearance:none;
+  appearance: none;
   transition:all .2s;
 }
 .select:focus{border-color:rgba(0,255,255,0.5);box-shadow:0 0 0 3px rgba(0,255,255,0.08)}
@@ -984,10 +986,33 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   <nav class="landing-nav">
     <button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button>
     <div style="display:flex;gap:28px;font-size:14px;color:var(--text2)">
-      <span style="cursor:pointer" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2')}" onfocus="this.style.color='var(--text)'" onblur="this.style.color='var(--text2')" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text2)'">Features</span>
-      <span style="cursor:pointer" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2')}" onfocus="this.style.color='var(--text)'" onblur="this.style.color='var(--text2')" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text2)'">How it Works</span>
-      <span style="cursor:pointer" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2')}" onfocus="this.style.color='var(--text)'" onblur="this.style.color='var(--text2')" onmouseenter="this.style.color='var(--text)'" onmouseleave="this.style.color='var(--text2)'">About</span>
-    </div>
+  <span style="cursor:pointer" role="button" tabindex="0"
+    onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2)'}"
+    onfocus="this.style.color='var(--text)'"
+    onblur="this.style.color='var(--text2)'"
+    onmouseenter="this.style.color='var(--text)'"
+    onmouseleave="this.style.color='var(--text2)'">
+    Features
+  </span>
+
+  <span style="cursor:pointer" role="button" tabindex="0"
+    onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2)'}"
+    onfocus="this.style.color='var(--text)'"
+    onblur="this.style.color='var(--text2)'"
+    onmouseenter="this.style.color='var(--text)'"
+    onmouseleave="this.style.color='var(--text2)'">
+    How it Works
+  </span>
+
+  <span style="cursor:pointer" role="button" tabindex="0"
+    onkeydown="if(event.key==='Enter'||event.key===' '){this.style.color='var(--text)'}else if(event.key==='Escape'){this.style.color='var(--text2)'}"
+    onfocus="this.style.color='var(--text)'"
+    onblur="this.style.color='var(--text2)'"
+    onmouseenter="this.style.color='var(--text)'"
+    onmouseleave="this.style.color='var(--text2)'">
+    About
+  </span>
+</div>
     <div style="display:flex;gap:10px">
       <button class="btn btn-ghost btn-sm" onclick="go('login')">Sign in</button>
       <button class="btn btn-primary btn-sm neo-border" onclick="go('register')">Get Started</button>
@@ -2204,285 +2229,311 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   </div>
 </div>
 
-<!-- ════════════════════════ JAVASCRIPT ════════════════════════ -->
 <script>
-/* ── CURSOR ── */
-const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
-(function raf(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(raf)})();
+const API_URL = "http://localhost:4000/graphql";
 
-/* ── THREE.JS PARTICLE UNIVERSE ── */
-(function(){
-  const canvas=document.getElementById('three-canvas');
-  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(window.innerWidth,window.innerHeight);
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,2000);
-  camera.position.z=600;
+const state = {
+  token: localStorage.getItem("studySyncToken"),
+  user: null,
+  matches: [],
+  sessions: [],
+};
 
-  /* Stars */
-  const starsGeo=new THREE.BufferGeometry();
-  const N=6000;
-  const pos=new Float32Array(N*3),col=new Float32Array(N*3);
-  const palette=[[0,1,1],[0.3,0.6,1],[0.65,0.55,1],[1,0.4,0.7],[0.2,0.85,0.6]];
-  for(let i=0;i<N;i++){
-    pos[i*3]=(Math.random()-.5)*2000;
-    pos[i*3+1]=(Math.random()-.5)*2000;
-    pos[i*3+2]=(Math.random()-.5)*2000;
-    const c=palette[Math.floor(Math.random()*palette.length)];
-    col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];
-  }
-  starsGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  starsGeo.setAttribute('color',new THREE.BufferAttribute(col,3));
-  const starsMat=new THREE.PointsMaterial({size:1.8,vertexColors:true,transparent:true,opacity:.7,sizeAttenuation:true});
-  scene.add(new THREE.Points(starsGeo,starsMat));
-
-  /* Nebula orbs */
-  function orb(color,x,y,z,r){
-    const g=new THREE.SphereGeometry(r,32,32);
-    const m=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.03,wireframe:false});
-    const mesh=new THREE.Mesh(g,m);
-    mesh.position.set(x,y,z);
-    scene.add(mesh);
-    // Glow ring
-    const rg=new THREE.TorusGeometry(r*1.05,2,8,64);
-    const rm=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.04,wireframe:true});
-    const rt=new THREE.Mesh(rg,rm);
-    rt.position.set(x,y,z);
-    rt.rotation.x=Math.PI*.3;
-    scene.add(rt);
-    return{mesh,rt};
-  }
-  const orb1=orb(0x00ffff,-300,200,0,180);
-  const orb2=orb(0xa78bfa,300,-150,0,150);
-  const orb3=orb(0xf472b6,-50,-300,-200,120);
-
-  /* Floating network nodes */
-  const nodes=[];
-  const nodeGeo=new THREE.SphereGeometry(3,8,8);
-  for(let i=0;i<20;i++){
-    const c=[0x00ffff,0x4aaeff,0xa78bfa,0xf472b6,0x34d399][i%5];
-    const mat=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.6});
-    const mesh=new THREE.Mesh(nodeGeo,mat);
-    mesh.position.set((Math.random()-.5)*800,(Math.random()-.5)*600,(Math.random()-.5)*300);
-    mesh.userData={vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,vz:(Math.random()-.5)*.2};
-    scene.add(mesh);
-    nodes.push(mesh);
+/* ───────────────────────── GQL CLIENT ───────────────────────── */
+async function gql(query, variables = {}, requireAuth = true) {
+  if (requireAuth && !state.token) {
+    throw new Error("Not authenticated");
   }
 
-  /* Lines between nearby nodes */
-  const lineMat=new THREE.LineBasicMaterial({color:0x00ffff,transparent:true,opacity:.06});
-  const lineGroup=new THREE.Group();
-  scene.add(lineGroup);
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(state.token && {
+        Authorization: `Bearer ${state.token}`,
+      }),
+    },
+    body: JSON.stringify({ query, variables }),
+  });
 
-  let t=0,lastMX=0,lastMY=0;
-  function updateLines(){
-    while(lineGroup.children.length)lineGroup.remove(lineGroup.children[0]);
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const d=nodes[i].position.distanceTo(nodes[j].position);
-        if(d<220){
-          const g=new THREE.BufferGeometry().setFromPoints([nodes[i].position,nodes[j].position]);
-          lineGroup.add(new THREE.Line(g,lineMat));
+  const json = await res.json();
+
+  if (json.errors) {
+    console.error(json.errors);
+    throw new Error(json.errors[0].message);
+  }
+
+  return json.data;
+}
+
+/* ───────────────────────── AUTH ───────────────────────── */
+function setToken(token) {
+  state.token = token;
+  localStorage.setItem("studySyncToken", token);
+}
+
+function logout() {
+  state.token = null;
+  localStorage.removeItem("studySyncToken");
+  go("login");
+}
+
+async function handleLogin() {
+  const container = document.getElementById("pg-login");
+
+  const email = container.querySelector('input[type="email"]').value;
+  const password = container.querySelector('input[type="password"]').value;
+
+  try {
+    const data = await gql(`
+      mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+          token
+          userId
         }
       }
-    }
-  }
+    `, { email, password }, false); // ✅ no auth required
 
-  document.addEventListener('mousemove',e=>{lastMX=(e.clientX/window.innerWidth-.5)*2;lastMY=-(e.clientY/window.innerHeight-.5)*2});
+    setToken(data.login.token);
 
-  function animate(){
-    requestAnimationFrame(animate);
-    t+=.005;
-    // Rotate star field slowly
-    scene.rotation.y=t*.03+lastMX*.05;
-    scene.rotation.x=lastMY*.03;
-    // Animate orbs
-    orb1.mesh.scale.setScalar(1+Math.sin(t*.7)*.05);
-    orb1.rt.rotation.z+=.003;
-    orb2.mesh.scale.setScalar(1+Math.sin(t*.5+1)*.04);
-    orb2.rt.rotation.y+=.004;
-    orb3.mesh.scale.setScalar(1+Math.sin(t*.9+2)*.06);
-    orb3.rt.rotation.x+=.002;
-    // Move nodes
-    nodes.forEach(n=>{
-      n.position.x+=n.userData.vx;n.position.y+=n.userData.vy;n.position.z+=n.userData.vz;
-      if(Math.abs(n.position.x)>400)n.userData.vx*=-1;
-      if(Math.abs(n.position.y)>300)n.userData.vy*=-1;
-      if(Math.abs(n.position.z)>200)n.userData.vz*=-1;
-    });
-    if(Math.floor(t*20)%4===0)updateLines();
-    renderer.render(scene,camera);
-  }
-  animate();
+    await loadCurrentUser();
+    go("dashboard");
 
-  window.addEventListener('resize',()=>{
-    camera.aspect=window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth,window.innerHeight);
-  });
-})();
+    toast("Logged in successfully", "success");
 
-/* ── PAGE NAVIGATION ── */
-function go(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('pg-'+id);
-  if(pg){pg.classList.add('active');window.scrollTo(0,0)}
-  const badge=document.getElementById('gql-badge');
-  const hide=['landing','login','register'];
-  badge.style.display=hide.includes(id)?'none':'flex';
-}
-
-/* ── INIT ── */
-window.addEventListener('load',()=>{
-  buildAvailGrid();
-  go('landing');
-});
-
-/* ── AUTH ── */
-function handleLogin(){toast('Authenticating via GraphQL...','info');setTimeout(()=>{go('dashboard');toast('Welcome back, Ahmed! 👋','success')},700)}
-function handleRegister(){toast('Creating account via GraphQL...','info');setTimeout(()=>{go('profile-setup');toast('Account created! Set up your profile.','success')},700)}
-function finishSetup(){toast('Profile complete! Running matching engine...','success');setTimeout(()=>go('dashboard'),800)}
-function doLogout(){go('landing');toast('Signed out successfully','info')}
-
-/* ── CHIPS / PREFS ── */
-function toggleChip(el){el.classList.toggle('on')}
-function stopProp(e){e.stopPropagation()}
-function pickPref(g,el){el.parentElement.querySelectorAll('.pref-card').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
-function updateGrp(v){const l=['Solo','1-on-1 (2 people)','Small Group (3)','Group of 4','Group of 5','Group of 6+'];document.getElementById('grp-lbl').textContent=l[v-1]||v+' people'}
-
-/* ── SESSION TYPE ── */
-function pickSessionType(t){
-  document.getElementById('type-online').classList.toggle('on',t==='online');
-  document.getElementById('type-inperson').classList.toggle('on',t==='inperson');
-  document.getElementById('f-online').style.display=t==='online'?'block':'none';
-  document.getElementById('f-location').style.display=t==='inperson'?'block':'none';
-}
-
-/* ── TABS ── */
-function switchTab(btn,id){
-  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const containers=['tb-connected','tb-incoming','tb-outgoing','tb-upcoming','tb-past','tb-explore'];
-  containers.forEach(c=>{const el=document.getElementById(c);if(el)el.style.display=c===id?'block':'none'});
-}
-
-/* ── PROFILE TABS ── */
-function showPTab(n,btn){
-  ['info','prefs','courses','history'].forEach(t=>{const el=document.getElementById('ptab-'+t);if(el)el.style.display=t===n?'block':'none'});
-  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-}
-
-/* ── AVAILABILITY GRID ── */
-function buildAvailGrid(){
-  const g=document.getElementById('avail-grid');if(!g)return;
-  const days=['','Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const times=['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
-  let h='';
-  days.forEach(d=>h+=`<div class="avail-cell hdr">${d}</div>`);
-  times.forEach((t,ti)=>{
-    h+=`<div class="avail-cell hdr" style="font-size:10px">${t}</div>`;
-    for(let d=0;d<7;d++){
-      const on=(d<5&&ti>=2&&ti<=5)?'on':'';
-      h+=`<div class="avail-cell ${on}" onclick="toggleAvail(this)"></div>`;
-    }
-  });
-  g.innerHTML=h;updateAvailCount();
-}
-function toggleAvail(el){el.classList.toggle('on');updateAvailCount()}
-function updateAvailCount(){
-  const n=document.querySelectorAll('.avail-cell.on:not(.hdr)').length;
-  const el=document.getElementById('avail-count');if(el)el.textContent=n+' slot'+(n!==1?'s':'')+' selected';
-}
-function availClear(){document.querySelectorAll('.avail-cell:not(.hdr)').forEach(c=>c.classList.remove('on'));updateAvailCount()}
-function availMornings(){availClear();document.querySelectorAll('.avail-cell:not(.hdr)').forEach((c,i)=>{if(Math.floor(i/7)<=3)c.classList.add('on')});updateAvailCount()}
-function availAfternoons(){availClear();document.querySelectorAll('.avail-cell:not(.hdr)').forEach((c,i)=>{const r=Math.floor(i/7);if(r>=4&&r<=7)c.classList.add('on')});updateAvailCount()}
-
-/* ── MESSAGES ── */
-function sendMsg(){
-  const input=document.getElementById('msg-in');
-  const txt=input.value.trim();if(!txt)return;
-  const c=document.getElementById('chat-msgs');
-  const d=document.createElement('div');
-  d.style.cssText='display:flex;flex-direction:column;gap:3px;align-items:flex-end';
-  d.innerHTML=`<div class="bubble me">${txt}</div><div class="bubble-time" style="text-align:right">Now</div>`;
-  c.appendChild(d);c.scrollTop=c.scrollHeight;input.value='';
-  setTimeout(()=>{
-    const r=document.createElement('div');
-    r.style.cssText='display:flex;flex-direction:column;gap:3px';
-    r.innerHTML=`<div class="bubble them">Got it! See you then 👍</div><div class="bubble-time">Now</div>`;
-    c.appendChild(r);c.scrollTop=c.scrollHeight;
-  },1200);
-}
-
-/* ── ACTIONS ── */
-function sendReq(n){toast(`Buddy request sent to ${n} via GraphQL 👋`,'success')}
-function acceptReq(n){toast(`Connected with ${n}! 🎉`,'success')}
-function createSession(){toast('Session created! Kafka event published & invitations sent','success');setTimeout(()=>go('sessions'),800)}
-function markAllRead(){document.querySelectorAll('.notif-item.unread').forEach(el=>el.classList.remove('unread'));toast('All notifications marked as read','info')}
-function markOneRead(btn){const el=btn.closest('.notif-item');if(el){el.classList.remove('unread');el.style.opacity='.5'}}
-
-/* ── TOAST ── */
-function toast(msg,type='info'){
-  const icons={success:'✓',info:'ℹ',error:'✗'};
-  const c=document.getElementById('toasts');
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;
-  el.innerHTML=`<span style="font-size:16px">${icons[type]}</span><span>${msg}</span>`;
-  c.appendChild(el);
-  setTimeout(()=>el.remove(),3200);
-}
-
-/* ── 3D CARD TILT ON HOVER ── */
-document.addEventListener('mousemove',e=>{
-  document.querySelectorAll('.card-3d').forEach(card=>{
-    const r=card.getBoundingClientRect();
-    if(e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top&&e.clientY<r.bottom){
-      const x=((e.clientX-r.left)/r.width-.5)*2;
-      const y=((e.clientY-r.top)/r.height-.5)*2;
-      card.style.transform=`perspective(1000px) rotateX(${-y*6}deg) rotateY(${x*6}deg) translateY(-8px)`;
-    } else {
-      card.style.transform='perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-    }
-  });
-});
-
-/* ── GRAPHQL LIVE ENDPOINT ── */
-async function gql(query, variables={}) {
-  const token = localStorage.getItem('studySyncToken') || '';
-  try {
-    const r = await fetch('http://localhost:4000/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': 'Bearer ' + token } : {})
-      },
-      body: JSON.stringify({ query, variables })
-    });
-    const json = await r.json();
-    if (json.errors) {
-      console.error('GraphQL Errors:', json.errors);
-      toast(json.errors[0].message, 'error');
-      throw new Error(json.errors[0].message);
-    }
-    return json;
   } catch (err) {
-    if (err.message !== 'Failed to fetch') console.error(err);
-    else toast('Could not connect to Gateway!', 'error');
-    return { data: null, error: err.message };
+    toast(err.message, "error");
   }
 }
 
-// Polling simulation for WebSockets / real-time
-setInterval(async () => {
-  const token = localStorage.getItem('studySyncToken');
-  if(token && document.getElementById('pg-notifications').classList.contains('active')) {
-     // Fetch notifications logic via gql
+async function handleRegister() {
+  const inputs = document.querySelectorAll("#pg-register input");
+
+  const name = inputs[0].value + " " + inputs[1].value;
+  const email = inputs[2].value;
+  const university = inputs[3].value;
+  const password = inputs[6].value;
+
+  try {
+    await gql(`
+      mutation Register($email: String!, $password: String!, $name: String!, $university: String!) {
+        register(
+          email: $email,
+          password: $password,
+          name: $name,
+          university: $university
+        ) {
+          success
+        }
+      }
+    `, { email, password, name, university }, false); // ✅ FIX
+
+    toast("Account created", "success");
+    go("login");
+
+  } catch (err) {
+    toast(err.message, "error");
   }
-}, 15000);
+}
+
+/* ───────────────────────── USER ───────────────────────── */
+async function loadCurrentUser() {
+  try {
+    const data = await gql(`
+      query {
+        me {
+          id
+          name
+          email
+          university
+        }
+      }
+    `);
+
+    state.user = data.me;
+    bindUserToUI();
+
+  } catch (err) {
+    console.error("Auth failed:", err);
+    logout();
+  }
+}
+
+function bindUserToUI() {
+  if (!state.user) return;
+
+  const nameEl = document.getElementById("user-name");
+  const emailEl = document.getElementById("user-email");
+  const avatar = document.getElementById("nav-avatar");
+
+  if (nameEl) nameEl.innerText = state.user.name;
+  if (emailEl) emailEl.innerText = state.user.email;
+  if (avatar) avatar.innerText = state.user.name.charAt(0).toUpperCase();
+}
+
+/* ───────────────────────── DASHBOARD ───────────────────────── */
+async function loadDashboard() {
+  try {
+    await loadCurrentUser();
+
+    await Promise.all([
+      loadMatches(),
+      loadSessions(),
+    ]);
+
+    bindStats({
+      totalStudyHours: 0,
+      sessionsCompleted: state.sessions.length,
+      matchesCount: state.matches.length
+    });
+
+  } catch (err) {
+    console.error(err);
+    toast("Failed to load dashboard", "error");
+  }
+}
+
+/* ───────────────────────── STATS ───────────────────────── */
+function bindStats(stats) {
+  const h = document.getElementById("stat-hours");
+  const s = document.getElementById("stat-sessions");
+  const m = document.getElementById("stat-matches");
+
+  if (h) h.innerText = stats.totalStudyHours || 0;
+  if (s) s.innerText = stats.sessionsCompleted || 0;
+  if (m) m.innerText = stats.matchesCount || 0;
+}
+
+/* ───────────────────────── MATCHES ───────────────────────── */
+async function loadMatches() {
+  const data = await gql(`
+    query {
+      myMatches {
+        userId
+        name
+        compatibility
+        university
+      }
+    }
+  `);
+
+  state.matches = data.myMatches || []; // ✅ FIX
+  renderMatches();
+}
+
+function renderMatches() {
+  const container = document.getElementById("matches-container");
+  if (!container) return;
+
+  if (!state.matches.length) {
+    container.innerHTML = `<div class="empty">No matches yet</div>`;
+    return;
+  }
+
+  container.innerHTML = state.matches.map(m => `
+    <div class="match-card">
+      <div style="font-weight:600">${m.name}</div>
+      <div style="font-size:12px;color:#888">${m.university || ""}</div>
+      <div style="margin-top:6px;color:#00ffff">${m.compatibility}% match</div>
+    </div>
+  `).join("");
+}
+
+/* ───────────────────────── SESSIONS ───────────────────────── */
+async function loadSessions() {
+  try {
+    const data = await gql(`
+      query {
+        mySessions {
+          id
+          title
+          time
+        }
+      }
+    `);
+
+    state.sessions = data.mySessions || [];
+
+  } catch {
+    state.sessions = []; // fallback if not implemented
+  }
+
+  renderSessions();
+}
+
+function renderSessions() {
+  const container = document.getElementById("sessions-container");
+  if (!container) return;
+
+  if (!state.sessions.length) {
+    container.innerHTML = `<div class="empty">No sessions yet</div>`;
+    return;
+  }
+
+  container.innerHTML = state.sessions.map(s => `
+    <div class="session-card">
+      <div style="font-weight:600">${s.title}</div>
+      <div style="font-size:12px;color:#888">
+        ${new Date(s.time).toLocaleString()}
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ───────────────────────── ACTIONS ───────────────────────── */
+async function createSession(title, time) {
+  await gql(`
+    mutation CreateSession($title: String!, $time: String!) {
+      createSession(title: $title, time: $time)
+    }
+  `, { title, time });
+
+  toast("Session created", "success");
+  loadSessions();
+}
+
+async function sendMessage(receiverId, content) {
+  await gql(`
+    mutation SendMessage($receiverId: ID!, $content: String!) {
+      sendMessage(receiverId: $receiverId, content: $content)
+    }
+  `, { receiverId, content });
+
+  toast("Message sent", "success");
+}
+
+/* ───────────────────────── NAVIGATION ───────────────────────── */
+function go(page) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  const el = document.getElementById("pg-" + page);
+  if (el) el.classList.add("active");
+
+  if (page === "dashboard") {
+    loadDashboard();
+  }
+}
+
+/* ───────────────────────── TOAST ───────────────────────── */
+function toast(msg, type = "info") {
+  const icons = { success: "✓", info: "ℹ", error: "✗" };
+  const c = document.getElementById("toasts");
+  if (!c) return;
+
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+
+  c.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ───────────────────────── INIT ───────────────────────── */
+window.onload = async () => {
+  if (state.token) {
+    await loadCurrentUser();
+    go("dashboard");
+  } else {
+    go("landing");
+  }
+};
 </script>
-</body>
-</html>

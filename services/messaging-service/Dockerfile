@@ -1,9 +1,15 @@
-FROM node:20-alpine
+FROM node:20
+
 WORKDIR /app
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-COPY package*.json ./
-RUN npm install --production
-COPY . .
-RUN chown -R appuser:appgroup /app
-USER appuser
-CMD ["npm", "start"]
+
+COPY services/messaging-service/package*.json ./
+RUN npm install
+
+COPY services/messaging-service ./services/messaging-service
+COPY shared ./shared
+
+WORKDIR /app/services/messaging-service
+
+RUN npx prisma generate
+
+CMD ["node", "src/index.js"]

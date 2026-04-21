@@ -1,13 +1,13 @@
-FROM node:20-alpine
+FROM node:20
+
 WORKDIR /app
-# We create a non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-COPY package*.json ./
-RUN npm install --production
+COPY gateway/package*.json ./
+RUN npm install
 
-COPY . .
-RUN chown -R appuser:appgroup /app
+COPY gateway ./gateway
+COPY shared ./shared
 
-USER appuser
-CMD ["npm", "start"]
+WORKDIR /app/gateway
+
+CMD ["node", "index.js"]

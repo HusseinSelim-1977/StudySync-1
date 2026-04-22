@@ -241,6 +241,291 @@ const handleMessage = async (parsed) => {
       });
     }
 
+    // -------- SEND BUDDY REQUEST --------
+    if (eventName === TOPICS.SEND_BUDDY_REQUEST) {
+      const { senderId, receiverId } = payload || {};
+
+      if (!senderId || !receiverId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'senderId and receiverId required',
+        });
+      }
+
+      if (senderId === receiverId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Cannot send request to yourself',
+        });
+      }
+
+      // Check if receiver exists
+      const receiver = await prisma.user.findUnique({
+        where: { id: receiverId },
+      });
+
+      if (!receiver) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Receiver not found',
+        });
+      }
+
+      // Check if request already exists
+      const existing = await prisma.buddyRequest.findUnique({
+        where: {
+          senderId_receiverId: {
+            senderId,
+            receiverId,
+          },
+        },
+      });
+
+      if (existing) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Request already sent',
+        });
+      }
+
+      const request = await prisma.buddyRequest.create({
+        data: {
+          senderId,
+          receiverId,
+          status: 'PENDING',
+        },
+      });
+
+      // Publish event for notification service
+      await kafkaProducer.send({
+        topic: TOPICS.BUDDY_REQUEST_SENT,
+        messages: [
+          {
+            value: JSON.stringify(
+              formatMessage(TOPICS.BUDDY_REQUEST_SENT, 'user-service', {
+                requestId: request.id,
+                senderId,
+                receiverId,
+              })
+            ),
+          },
+        ],
+      });
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { request },
+      });
+    }
+
+    // -------- ACCEPT BUDDY REQUEST --------
+    if (eventName === TOPICS.ACCEPT_BUDDY_REQUEST) {
+      const { requestId, userId } = payload || {};
+
+      if (!requestId || !userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'requestId and userId required',
+        });
+      }
+
+      const request = await prisma.buddyRequest.findUnique({
+        where: { id: requestId },
+      });
+
+      if (!request) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Request not found',
+        });
+      }
+
+      if (request.receiverId !== userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Not authorized to accept this request',
+        });
+      }
+
+      if (request.status !== 'PENDING') {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Request already processed',
+        });
+      }
+
+      const updated = await prisma.buddyRequest.update({
+        where: { id: requestId },
+        data: { status: 'ACCEPTED' },
+      });
+
+      // Publish event for notification service
+      await kafkaProducer.send({
+        topic: TOPICS.BUDDY_REQUEST_ACCEPTED,
+        messages: [
+          {
+            value: JSON.stringify(
+              formatMessage(TOPICS.BUDDY_REQUEST_ACCEPTED, 'user-service', {
+                requestId: updated.id,
+                senderId: updated.senderId,
+                receiverId: updated.receiverId,
+              })
+            ),
+          },
+        ],
+      });
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { request: updated },
+      });
+    }
+
+    // -------- DECLINE BUDDY REQUEST --------
+    if (eventName === TOPICS.DECLINE_BUDDY_REQUEST) {
+      const { requestId, userId } = payload || {};
+
+      if (!requestId || !userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'requestId and userId required',
+        });
+      }
+
+      const request = await prisma.buddyRequest.findUnique({
+        where: { id: requestId },
+      });
+
+      if (!request) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Request not found',
+        });
+      }
+
+      if (request.receiverId !== userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Not authorized to decline this request',
+        });
+      }
+
+      if (request.status !== 'PENDING') {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'Request already processed',
+        });
+      }
+
+      const updated = await prisma.buddyRequest.update({
+        where: { id: requestId },
+        data: { status: 'DECLINED' },
+      });
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { request: updated },
+      });
+    }
+
+    // -------- GET BUDDY REQUESTS --------
+    if (eventName === TOPICS.GET_BUDDY_REQUESTS) {
+      const { userId } = payload || {};
+
+      if (!userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'userId required',
+        });
+      }
+
+      const requests = await prisma.buddyRequest.findMany({
+        where: {
+          receiverId: userId,
+          status: 'PENDING',
+        },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              university: true,
+              academicYear: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { requests },
+      });
+    }
+
+    // -------- GET BUDDIES --------
+    if (eventName === TOPICS.GET_BUDDIES) {
+      const { userId } = payload || {};
+
+      if (!userId) {
+        return sendResponse(replyTo, correlationId, {
+          success: false,
+          error: 'userId required',
+        });
+      }
+
+      // Get accepted requests where user is either sender or receiver
+      const sentRequests = await prisma.buddyRequest.findMany({
+        where: {
+          senderId: userId,
+          status: 'ACCEPTED',
+        },
+        include: {
+          receiver: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              university: true,
+              academicYear: true,
+            },
+          },
+        },
+      });
+
+      const receivedRequests = await prisma.buddyRequest.findMany({
+        where: {
+          receiverId: userId,
+          status: 'ACCEPTED',
+        },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              university: true,
+              academicYear: true,
+            },
+          },
+        },
+      });
+
+      // Combine and format buddies
+      const buddies = [
+        ...sentRequests.map(r => r.receiver),
+        ...receivedRequests.map(r => r.sender),
+      ];
+
+      return sendResponse(replyTo, correlationId, {
+        success: true,
+        data: { buddies },
+      });
+    }
+
     console.warn('⚠️ Unknown event:', eventName);
   } catch (err) {
     console.error('❌ Handler error:', err);
@@ -268,6 +553,11 @@ const startConsumer = async () => {
         TOPICS.LOGIN_USER,
         TOPICS.GET_USER,
         TOPICS.UPDATE_USER,
+        TOPICS.SEND_BUDDY_REQUEST,
+        TOPICS.ACCEPT_BUDDY_REQUEST,
+        TOPICS.DECLINE_BUDDY_REQUEST,
+        TOPICS.GET_BUDDY_REQUESTS,
+        TOPICS.GET_BUDDIES,
       ];
 
       for (const topic of topics) {

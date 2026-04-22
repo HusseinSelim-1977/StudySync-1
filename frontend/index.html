@@ -1580,8 +1580,11 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
         </div>
       </div>
       <!-- Match Cards -->
+      <!-- NOTE: In production, these cards would be dynamically generated from state.matches -->
+      <!-- Each match would have userId1/userId2 from the backend to pass to sendReq() and goToMatchDetail() -->
+      <!-- For now, using placeholder IDs - replace with real match.userId1 or match.userId2 when rendering -->
       <div class="grid-3">
-        <div class="match-card card-3d anim-1" onclick="go('match-detail')">
+        <div class="match-card card-3d anim-1" onclick="goToMatchDetail('user-sara-id')" data-user-id="user-sara-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#0ff,#4af)">S</div>
@@ -1593,11 +1596,11 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-neo">Algorithms</span><span class="badge badge-purple">Data Structures</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: quiet study · morning slots · same year</div>
             <div style="display:flex;gap:8px">
-            <button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('Sara')">Send Request</button>
-            <button class="btn btn-ghost btn-sm" onclick="stopProp(event);go('match-detail')">View</button>
+            <button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-sara-id', 'Sara')">Send Request</button>
+            <button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-sara-id')">View</button>
           </div>
         </div>
-        <div class="match-card card-3d anim-2">
+        <div class="match-card card-3d anim-2" onclick="goToMatchDetail('user-omar-id')" data-user-id="user-omar-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#34d399,#0ff)">O</div>
@@ -1608,9 +1611,9 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="progress-track" style="margin-bottom:12px"><div class="progress-fill" style="width:89%"></div></div>
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-neo">Algorithms</span><span class="badge badge-green">OS</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: discussion style · afternoon slots</div>
-          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="sendReq('Omar')">Send Request</button><button class="btn btn-ghost btn-sm">View</button></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-omar-id', 'Omar')">Send Request</button><button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-omar-id')">View</button></div>
         </div>
-        <div class="match-card card-3d anim-3">
+        <div class="match-card card-3d anim-3" onclick="goToMatchDetail('user-lina-id')" data-user-id="user-lina-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#a78bfa,#f472b6)">L</div>
@@ -1621,9 +1624,9 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="progress-track" style="margin-bottom:12px"><div class="progress-fill" style="width:82%;background:linear-gradient(90deg,var(--neo3),#c084fc)"></div></div>
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-purple">Data Structures</span><span class="badge badge-amber">Discrete Math</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: writing notes · evening availability</div>
-          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="sendReq('Lina')">Send Request</button><button class="btn btn-ghost btn-sm">View</button></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-lina-id', 'Lina')">Send Request</button><button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-lina-id')">View</button></div>
         </div>
-        <div class="match-card card-3d">
+        <div class="match-card card-3d" onclick="goToMatchDetail('user-khaled-id')" data-user-id="user-khaled-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#fbbf24,#f472b6)">K</div>
@@ -1634,9 +1637,9 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="progress-track" style="margin-bottom:12px"><div class="progress-fill" style="width:77%;background:linear-gradient(90deg,var(--neo4),#fb923c)"></div></div>
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-pink">ML</span><span class="badge badge-neo">Algorithms</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: fast pace · online preference</div>
-          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="sendReq('Khaled')">Send Request</button><button class="btn btn-ghost btn-sm">View</button></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-khaled-id', 'Khaled')">Send Request</button><button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-khaled-id')">View</button></div>
         </div>
-        <div class="match-card card-3d">
+        <div class="match-card card-3d" onclick="goToMatchDetail('user-mariam-id')" data-user-id="user-mariam-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#f472b6,#fb923c)">M</div>
@@ -1647,9 +1650,9 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="progress-track" style="margin-bottom:12px"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,#f472b6,#fb923c)"></div></div>
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-pink">DB Systems</span><span class="badge badge-purple">Soft. Eng.</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: moderate pace · mixed availability</div>
-          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="sendReq('Mariam')">Send Request</button><button class="btn btn-ghost btn-sm">View</button></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-mariam-id', 'Mariam')">Send Request</button><button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-mariam-id')">View</button></div>
         </div>
-        <div class="match-card card-3d">
+        <div class="match-card card-3d" onclick="goToMatchDetail('user-hassan-id')" data-user-id="user-hassan-id">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
             <div style="display:flex;gap:12px;align-items:center">
               <div class="avatar av-md" style="background:linear-gradient(135deg,#0ff,#34d399)">H</div>
@@ -1660,7 +1663,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           <div class="progress-track" style="margin-bottom:12px"><div class="progress-fill" style="width:68%;background:linear-gradient(90deg,var(--neo5),var(--neo))"></div></div>
           <div class="chips" style="margin-bottom:14px"><span class="badge badge-neo">Networks</span><span class="badge badge-green">OS</span></div>
           <div style="font-size:12px;color:var(--text2);margin-bottom:16px">💡 Shared: weekend slots · discussion style</div>
-          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="sendReq('Hassan')">Send Request</button><button class="btn btn-ghost btn-sm">View</button></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-success btn-sm" onclick="stopProp(event);sendReq('user-hassan-id', 'Hassan')">Send Request</button><button class="btn btn-ghost btn-sm" onclick="stopProp(event);goToMatchDetail('user-hassan-id')">View</button></div>
         </div>
       </div>
     </div>
@@ -1689,7 +1692,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
           </div>
           <p style="color:var(--text2);font-size:14px;margin-top:14px;line-height:1.7;font-weight:300">Hey! I'm Sara, passionate about algorithms and problem solving. I love discussing concepts out loud and working through problems collaboratively. Let's study together!</p>
           <div style="display:flex;gap:10px;margin-top:20px">
-            <button class="btn btn-neo" onclick="sendReq('Sara')">👋 Send Buddy Request</button>
+            <button class="btn btn-neo" onclick="sendReq(state.currentMatchUserId, 'Sara')">👋 Send Buddy Request</button>
             <button class="btn btn-primary" onclick="go('create-session')">📅 Schedule Session</button>
             <button class="btn btn-ghost" onclick="go('messages')">💬 Message</button>
           </div>
@@ -2152,7 +2155,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
                   <div><label class="input-label">Year<select class="select"><option>Year 3</option></select></label></div>
                 </div>
                 <div><label class="input-label">Bio<textarea class="textarea">3rd year CS student passionate about algorithms and collaborative learning.</textarea></label></div>
-                <button class="btn btn-primary" onclick="toast('Profile updated! Kafka event published.','success')">Save Changes</button>
+                <button class="btn btn-primary" onclick="saveProfileInfo()">Save Changes</button>
               </div>
             </div>
           </div>
@@ -2185,7 +2188,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
                     <div class="pref-card" onclick="this.classList.toggle('on')"><span class="pref-emoji">🔇</span><div class="pref-label">Quiet</div></div>
                   </div>
                 </div>
-                <button class="btn btn-primary" onclick="toast('Preferences saved! Re-running match algorithm...','success')">Save Preferences</button>
+                <button class="btn btn-primary" onclick="saveProfilePreferences()">Save Preferences</button>
               </div>
             </div>
           </div>
@@ -2210,7 +2213,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
                 <div class="chip on" onclick="toggleChip(this)">Recursion</div>
                 <div class="chip" onclick="toggleChip(this)">Tree Algorithms</div>
               </div>
-              <button class="btn btn-primary" onclick="toast('Courses updated! Re-matching...','success')">Update Courses</button>
+              <button class="btn btn-primary" onclick="saveProfileCourses()">Update Courses</button>
             </div>
           </div>
           <!-- History -->
@@ -2229,311 +2232,6 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   </div>
 </div>
 
-<script>
-const API_URL = "http://localhost:4000/graphql";
-
-const state = {
-  token: localStorage.getItem("studySyncToken"),
-  user: null,
-  matches: [],
-  sessions: [],
-};
-
-/* ───────────────────────── GQL CLIENT ───────────────────────── */
-async function gql(query, variables = {}, requireAuth = true) {
-  if (requireAuth && !state.token) {
-    throw new Error("Not authenticated");
-  }
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(state.token && {
-        Authorization: `Bearer ${state.token}`,
-      }),
-    },
-    body: JSON.stringify({ query, variables }),
-  });
-
-  const json = await res.json();
-
-  if (json.errors) {
-    console.error(json.errors);
-    throw new Error(json.errors[0].message);
-  }
-
-  return json.data;
-}
-
-/* ───────────────────────── AUTH ───────────────────────── */
-function setToken(token) {
-  state.token = token;
-  localStorage.setItem("studySyncToken", token);
-}
-
-function logout() {
-  state.token = null;
-  localStorage.removeItem("studySyncToken");
-  go("login");
-}
-
-async function handleLogin() {
-  const container = document.getElementById("pg-login");
-
-  const email = container.querySelector('input[type="email"]').value;
-  const password = container.querySelector('input[type="password"]').value;
-
-  try {
-    const data = await gql(`
-      mutation Login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-          token
-          userId
-        }
-      }
-    `, { email, password }, false); // ✅ no auth required
-
-    setToken(data.login.token);
-
-    await loadCurrentUser();
-    go("dashboard");
-
-    toast("Logged in successfully", "success");
-
-  } catch (err) {
-    toast(err.message, "error");
-  }
-}
-
-async function handleRegister() {
-  const inputs = document.querySelectorAll("#pg-register input");
-
-  const name = inputs[0].value + " " + inputs[1].value;
-  const email = inputs[2].value;
-  const university = inputs[3].value;
-  const password = inputs[6].value;
-
-  try {
-    await gql(`
-      mutation Register($email: String!, $password: String!, $name: String!, $university: String!) {
-        register(
-          email: $email,
-          password: $password,
-          name: $name,
-          university: $university
-        ) {
-          success
-        }
-      }
-    `, { email, password, name, university }, false); // ✅ FIX
-
-    toast("Account created", "success");
-    go("login");
-
-  } catch (err) {
-    toast(err.message, "error");
-  }
-}
-
-/* ───────────────────────── USER ───────────────────────── */
-async function loadCurrentUser() {
-  try {
-    const data = await gql(`
-      query {
-        me {
-          id
-          name
-          email
-          university
-        }
-      }
-    `);
-
-    state.user = data.me;
-    bindUserToUI();
-
-  } catch (err) {
-    console.error("Auth failed:", err);
-    logout();
-  }
-}
-
-function bindUserToUI() {
-  if (!state.user) return;
-
-  const nameEl = document.getElementById("user-name");
-  const emailEl = document.getElementById("user-email");
-  const avatar = document.getElementById("nav-avatar");
-
-  if (nameEl) nameEl.innerText = state.user.name;
-  if (emailEl) emailEl.innerText = state.user.email;
-  if (avatar) avatar.innerText = state.user.name.charAt(0).toUpperCase();
-}
-
-/* ───────────────────────── DASHBOARD ───────────────────────── */
-async function loadDashboard() {
-  try {
-    await loadCurrentUser();
-
-    await Promise.all([
-      loadMatches(),
-      loadSessions(),
-    ]);
-
-    bindStats({
-      totalStudyHours: 0,
-      sessionsCompleted: state.sessions.length,
-      matchesCount: state.matches.length
-    });
-
-  } catch (err) {
-    console.error(err);
-    toast("Failed to load dashboard", "error");
-  }
-}
-
-/* ───────────────────────── STATS ───────────────────────── */
-function bindStats(stats) {
-  const h = document.getElementById("stat-hours");
-  const s = document.getElementById("stat-sessions");
-  const m = document.getElementById("stat-matches");
-
-  if (h) h.innerText = stats.totalStudyHours || 0;
-  if (s) s.innerText = stats.sessionsCompleted || 0;
-  if (m) m.innerText = stats.matchesCount || 0;
-}
-
-/* ───────────────────────── MATCHES ───────────────────────── */
-async function loadMatches() {
-  const data = await gql(`
-    query {
-      myMatches {
-        userId
-        name
-        compatibility
-        university
-      }
-    }
-  `);
-
-  state.matches = data.myMatches || []; // ✅ FIX
-  renderMatches();
-}
-
-function renderMatches() {
-  const container = document.getElementById("matches-container");
-  if (!container) return;
-
-  if (!state.matches.length) {
-    container.innerHTML = `<div class="empty">No matches yet</div>`;
-    return;
-  }
-
-  container.innerHTML = state.matches.map(m => `
-    <div class="match-card">
-      <div style="font-weight:600">${m.name}</div>
-      <div style="font-size:12px;color:#888">${m.university || ""}</div>
-      <div style="margin-top:6px;color:#00ffff">${m.compatibility}% match</div>
-    </div>
-  `).join("");
-}
-
-/* ───────────────────────── SESSIONS ───────────────────────── */
-async function loadSessions() {
-  try {
-    const data = await gql(`
-      query {
-        mySessions {
-          id
-          title
-          time
-        }
-      }
-    `);
-
-    state.sessions = data.mySessions || [];
-
-  } catch {
-    state.sessions = []; // fallback if not implemented
-  }
-
-  renderSessions();
-}
-
-function renderSessions() {
-  const container = document.getElementById("sessions-container");
-  if (!container) return;
-
-  if (!state.sessions.length) {
-    container.innerHTML = `<div class="empty">No sessions yet</div>`;
-    return;
-  }
-
-  container.innerHTML = state.sessions.map(s => `
-    <div class="session-card">
-      <div style="font-weight:600">${s.title}</div>
-      <div style="font-size:12px;color:#888">
-        ${new Date(s.time).toLocaleString()}
-      </div>
-    </div>
-  `).join("");
-}
-
-/* ───────────────────────── ACTIONS ───────────────────────── */
-async function createSession(title, time) {
-  await gql(`
-    mutation CreateSession($title: String!, $time: String!) {
-      createSession(title: $title, time: $time)
-    }
-  `, { title, time });
-
-  toast("Session created", "success");
-  loadSessions();
-}
-
-async function sendMessage(receiverId, content) {
-  await gql(`
-    mutation SendMessage($receiverId: ID!, $content: String!) {
-      sendMessage(receiverId: $receiverId, content: $content)
-    }
-  `, { receiverId, content });
-
-  toast("Message sent", "success");
-}
-
-/* ───────────────────────── NAVIGATION ───────────────────────── */
-function go(page) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  const el = document.getElementById("pg-" + page);
-  if (el) el.classList.add("active");
-
-  if (page === "dashboard") {
-    loadDashboard();
-  }
-}
-
-/* ───────────────────────── TOAST ───────────────────────── */
-function toast(msg, type = "info") {
-  const icons = { success: "✓", info: "ℹ", error: "✗" };
-  const c = document.getElementById("toasts");
-  if (!c) return;
-
-  const el = document.createElement("div");
-  el.className = `toast ${type}`;
-  el.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
-
-  c.appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
-
-/* ───────────────────────── INIT ───────────────────────── */
-window.onload = async () => {
-  if (state.token) {
-    await loadCurrentUser();
-    go("dashboard");
-  } else {
-    go("landing");
-  }
-};
-</script>
+<script src="app.js"></script>
+</body>
+</html>

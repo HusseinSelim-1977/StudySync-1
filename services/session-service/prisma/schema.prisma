@@ -29,6 +29,7 @@ model Session {
   location        String?
   maxParticipants Int
   status          SessionStatus        @default(ACTIVE)
+  invitedUserIds  String[]             @default([])
   createdAt       DateTime             @default(now())
   
   participants    SessionParticipant[] // relationship

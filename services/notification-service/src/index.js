@@ -110,12 +110,78 @@ const start = async () => {
   await kafkaConsumer.subscribe({ topic: TOPICS.SESSION_JOINED });
   await kafkaConsumer.subscribe({ topic: TOPICS.SESSION_CANCELLED });
   await kafkaConsumer.subscribe({ topic: TOPICS.MESSAGE_SENT });
+  await kafkaConsumer.subscribe({ topic: TOPICS.GET_NOTIFICATIONS });
+  await kafkaConsumer.subscribe({ topic: TOPICS.MARK_NOTIFICATION_READ });
+  await kafkaConsumer.subscribe({ topic: TOPICS.MARK_ALL_NOTIFICATIONS_READ });
 
   await kafkaConsumer.run({
     eachMessage: async ({ message }) => {
       const msg = JSON.parse(message.value.toString());
+      const { eventName, payload, correlationId, replyTo } = msg;
 
-      const { eventName, payload } = msg;
+      // -------- QUERY: GET NOTIFICATIONS --------
+      if (eventName === TOPICS.GET_NOTIFICATIONS) {
+        try {
+          const { userId, unreadOnly } = payload;
+          const notifications = await prisma.notification.findMany({
+            where: { userId, ...(unreadOnly && { isRead: false }) },
+            orderBy: { createdAt: 'desc' },
+            take: 50
+          });
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: true, data: { notifications } } }) }]
+          });
+        } catch (err) {
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: false, error: err.message } }) }]
+          });
+        }
+        return;
+      }
+
+      // -------- QUERY: MARK ONE READ --------
+      if (eventName === TOPICS.MARK_NOTIFICATION_READ) {
+        try {
+          const { id, userId } = payload;
+          const notification = await prisma.notification.update({
+            where: { id },
+            data: { isRead: true }
+          });
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: true, data: { notification } } }) }]
+          });
+        } catch (err) {
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: false, error: err.message } }) }]
+          });
+        }
+        return;
+      }
+
+      // -------- QUERY: MARK ALL READ --------
+      if (eventName === TOPICS.MARK_ALL_NOTIFICATIONS_READ) {
+        try {
+          const { userId } = payload;
+          await prisma.notification.updateMany({
+            where: { userId, isRead: false },
+            data: { isRead: true }
+          });
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: true, data: { success: true } } }) }]
+          });
+        } catch (err) {
+          await kafkaProducer.send({
+            topic: replyTo,
+            messages: [{ value: JSON.stringify({ correlationId, payload: { success: false, error: err.message } }) }]
+          });
+        }
+        return;
+      }
 
       await handleEvent(eventName, payload);
     }

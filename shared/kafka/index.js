@@ -4,9 +4,11 @@ const kafka = new Kafka({
     clientId: 'studysync-core',
     brokers: [process.env.KAFKA_BROKERS || 'localhost:9092'],
     retry: {
-        initialRetryTime: 300,
-        retries: 5
-    }
+        initialRetryTime: 1000,
+        retries: 10
+    },
+    connectionTimeout: 10000,
+    authenticationTimeout: 10000,
 });
 
 // ---------------- PRODUCER ----------------
@@ -20,7 +22,11 @@ const createProducer = () => {
 // ---------------- CONSUMER ----------------
 
 const createConsumer = (groupId) => {
-    return kafka.consumer({ groupId });
+    return kafka.consumer({ 
+        groupId,
+        sessionTimeout: 30000,
+        heartbeatInterval: 3000,
+    });
 };
 
 // ---------------- TOPICS ----------------

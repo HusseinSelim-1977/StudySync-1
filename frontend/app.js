@@ -133,6 +133,46 @@ async function handleRegister() {
 // USER
 // ═══════════════════════════════════════════════════════════════
 
+function updateAuthUI() {
+  if (!state.user) return;
+
+  const fullName = state.user.name || "User";
+  const firstName = fullName.split(" ")[0];
+  const initial = firstName[0].toUpperCase();
+
+  // Update greeting on dashboard
+  const greetingEl = document.getElementById("user-greeting-name");
+  if (greetingEl) greetingEl.textContent = firstName;
+
+  // Update navbar and profile avatar initials
+  document.querySelectorAll(".user-initial").forEach(el => {
+    el.textContent = initial;
+  });
+
+  // Update profile name and handle
+  const profileNameEl = document.getElementById("profile-name");
+  if (profileNameEl) profileNameEl.textContent = fullName;
+
+  const profileHandleEl = document.getElementById("profile-handle");
+  if (profileHandleEl) {
+    const handle = fullName.toLowerCase().replace(/\s+/g, ".");
+    profileHandleEl.textContent = `@${handle} · ${state.user.university || ""} · Year ${state.user.academicYear || ""}`;
+  }
+
+  // Update profile edit form
+  const fnInput = document.getElementById("edit-first-name");
+  if (fnInput) fnInput.value = firstName;
+  
+  const lnInput = document.getElementById("edit-last-name");
+  if (lnInput) lnInput.value = fullName.split(" ").slice(1).join(" ");
+  
+  const emailInput = document.getElementById("edit-email");
+  if (emailInput) emailInput.value = state.user.email || "";
+  
+  const uniInput = document.getElementById("edit-university");
+  if (uniInput) uniInput.value = state.user.university || "";
+}
+
 async function loadCurrentUser() {
   try {
     const data = await gql(`
@@ -147,6 +187,7 @@ async function loadCurrentUser() {
       }
     `);
     state.user = data.me;
+    updateAuthUI();
   } catch (err) {
     console.error("Auth failed:", err);
     doLogout();
@@ -178,14 +219,12 @@ async function loadProfile() {
 }
 
 async function saveProfileInfo() {
-  const tab = document.getElementById("ptab-info");
-  if (!tab) return;
-
-  const inputs = tab.querySelectorAll("input, select");
-  const name = inputs[0]?.value;
-  const university = inputs[1]?.value;
-  const academicYear = inputs[2]?.value;
-  const contactPhone = inputs[3]?.value;
+  const firstName = document.getElementById("edit-first-name")?.value || "";
+  const lastName = document.getElementById("edit-last-name")?.value || "";
+  const name = `${firstName} ${lastName}`.trim();
+  const university = document.getElementById("edit-university")?.value;
+  const academicYear = document.getElementById("edit-year")?.value;
+  const contactPhone = document.getElementById("edit-phone")?.value;
 
   try {
     await gql(`

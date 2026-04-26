@@ -10,7 +10,7 @@ const consumer = createConsumer('gateway-group');
 
 const pendingRequests = new Map();
 
-const REQUEST_TIMEOUT = 5000;
+const REQUEST_TIMEOUT = 30000;
 
 const initKafka = async () => {
   await producer.connect();

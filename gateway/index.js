@@ -18,7 +18,7 @@ const unwrap = (res) => {
   return res.data;
 };
 
-const withTimeout = (promise, ms = 8000) =>
+const withTimeout = (promise, ms = 30000) =>
   Promise.race([
     promise,
     new Promise((_, reject) =>

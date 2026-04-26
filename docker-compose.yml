@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 services:
 
@@ -20,6 +20,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
@@ -27,6 +28,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
+    restart: always
     depends_on:
       - zookeeper
     ports:
@@ -50,6 +52,7 @@ services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
+    restart: always
     depends_on:
       - kafka
     ports:
@@ -64,6 +67,7 @@ services:
       context: .
       dockerfile: ./gateway/Dockerfile
     container_name: gateway
+    restart: always
     ports:
       - "4000:4000"
     env_file:
@@ -78,6 +82,7 @@ services:
       context: .
       dockerfile: ./services/user-service/Dockerfile
     container_name: user-service
+    restart: always
     env_file:
       - ./services/user-service/.env
     depends_on:
@@ -89,6 +94,7 @@ services:
       context: .
       dockerfile: ./services/profile-service/Dockerfile
     container_name: profile-service
+    restart: always
     env_file:
       - ./services/profile-service/.env
     depends_on:
@@ -100,6 +106,7 @@ services:
       context: .
       dockerfile: ./services/availability-service/Dockerfile
     container_name: availability-service
+    restart: always
     env_file:
       - ./services/availability-service/.env
     depends_on:
@@ -111,6 +118,7 @@ services:
       context: .
       dockerfile: ./services/matching-service/Dockerfile
     container_name: matching-service
+    restart: always
     env_file:
       - ./services/matching-service/.env
     depends_on:
@@ -122,6 +130,7 @@ services:
       context: .
       dockerfile: ./services/session-service/Dockerfile
     container_name: session-service
+    restart: always
     env_file:
       - ./services/session-service/.env
     depends_on:
@@ -133,6 +142,7 @@ services:
       context: .
       dockerfile: ./services/notification-service/Dockerfile
     container_name: notification-service
+    restart: always
     env_file:
       - ./services/notification-service/.env
     depends_on:
@@ -144,6 +154,7 @@ services:
       context: .
       dockerfile: ./services/messaging-service/Dockerfile
     container_name: messaging-service
+    restart: always
     ports:
       - "4007:4007"
     env_file:

@@ -1170,10 +1170,10 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
       <div class="glass-heavy" style="padding:36px">
         <div style="display:flex;flex-direction:column;gap:20px">
           <div class="form-row">
-            <div><label class="input-label">First Name<input class="input" type="text" placeholder="Ahmed"/></label></div>
-            <div><label class="input-label">Last Name<input class="input" type="text" placeholder="Hassan"/></label></div>
+            <div><label class="input-label">First Name<input class="input" type="text" placeholder="Enter first name"/></label></div>
+            <div><label class="input-label">Last Name<input class="input" type="text" placeholder="Enter last name"/></label></div>
           </div>
-          <div><label class="input-label">University Email<input class="input" type="email" placeholder="ahmed@giu-uni.de"/></label></div>
+          <div><label class="input-label">University Email<input class="input" type="email" placeholder="email@university.edu"/></label></div>
           <div class="form-row">
             <div><label class="input-label">University<input class="input" type="text" placeholder="GIU Cairo"/></label></div>
             <div><label class="input-label">Major<input class="input" type="text" placeholder="CS"/></label></div>
@@ -1206,8 +1206,9 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
       </div>
       <div class="glass-heavy" style="padding:36px">
         <div style="display:flex;flex-direction:column;gap:20px">
-          <div><label class="input-label">Email<input class="input" type="email" value="ahmed@giu-uni.de"/></label></div>
-          <div><label class="input-label">Password<input class="input" type="password" value="password123"/></label></div>
+          <div><label class="input-label">Email<input class="input" type="email" placeholder="email@university.edu"/></label></div>
+          <div><label class="input-label">Password<input class="input" type="password" placeholder="••••••••"/></label></div>
+                
           <div style="display:flex;justify-content:space-between;font-size:13px">
             <label style="display:flex;gap:8px;align-items:center;cursor:pointer;color:var(--text2)">
               <input type="checkbox" checked style="accent-color:var(--neo)" id="remember-me"/> Remember me
@@ -1273,11 +1274,11 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
             </div>
           </div>
           <div class="form-row">
-            <div><label class="input-label">University<input class="input" value="German International University"/></label></div>
-            <div><label class="input-label">Academic Year<select class="select"><option>Year 1</option><option>Year 2</option><option selected>Year 3</option><option>Year 4</option></select></label></div>
+            <div><label class="input-label">University<input class="input" placeholder="Your University"/></label></div>
+            <div><label class="input-label">Academic Year<select class="select"><option value="">Select Year</option><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option></select></label></div>
           </div>
           <div class="form-row">
-            <div><label class="input-label">Contact Email<input class="input" type="email" value="ahmed@giu-uni.de"/></label></div>
+            <div><label class="input-label">Contact Email<input class="input" type="email" placeholder="email@university.edu"/></label></div>
             <div><label class="input-label">Phone (optional)<input class="input" type="text" placeholder="+20 1XX XXX XXXX"/></label></div>
           </div>
           <div style="display:flex;gap:12px;margin-top:8px">
@@ -1360,7 +1361,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
   <nav class="navbar" id="nav-avail" aria-label="Main navigation">
     <button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button>
     <div style="font-size:13px;color:var(--text2)">Availability Management</div>
-    <div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div>
+    <div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div>
   </nav>
   <div class="pt-nav pb-80" style="position:relative;z-index:2">
     <div class="wrap" style="max-width:900px">
@@ -1404,13 +1405,13 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ DASHBOARD ════════════════════════ -->
 <div id="pg-dashboard" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link active" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link active" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap">
       <!-- Greeting -->
       <div style="margin-bottom:32px" class="anim-1">
         <div class="mono" style="margin-bottom:6px">GOOD AFTERNOON ☀️</div>
-        <h1 style="font-size:36px;font-weight:900;letter-spacing:-1.5px;margin-bottom:8px">Welcome back, <span class="t-neo">Ahmed</span></h1>
+        <h1 style="font-size:36px;font-weight:900;letter-spacing:-1.5px;margin-bottom:8px">Welcome back, <span class="t-neo" id="user-greeting-name">User</span></h1>
         <p style="color:var(--text2);font-size:15px;font-weight:300">You have 3 new matches and 1 upcoming session today.</p>
       </div>
       <!-- Stats -->
@@ -1552,7 +1553,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ MATCHING ════════════════════════ -->
 <div id="pg-matching" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link active" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link active" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px">
@@ -1672,7 +1673,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ MATCH DETAIL ════════════════════════ -->
 <div id="pg-match-detail" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link active" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link active" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap" style="max-width:860px">
       <button class="btn btn-ghost btn-sm" style="margin-bottom:24px" onclick="go('matching')">← Back to Matches</button>
@@ -1750,7 +1751,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ CONNECTIONS ════════════════════════ -->
 <div id="pg-connections" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link active" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link active" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap">
       <h1 style="font-size:34px;font-weight:900;letter-spacing:-1px;margin-bottom:8px">Study Buddies</h1>
@@ -1815,7 +1816,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ SESSIONS ════════════════════════ -->
 <div id="pg-sessions" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link active" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link active" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px">
@@ -1900,7 +1901,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ CREATE SESSION ════════════════════════ -->
 <div id="pg-create-session" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link active" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link active" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-80" style="position:relative;z-index:2">
     <div class="wrap" style="max-width:680px">
       <button class="btn btn-ghost btn-sm" style="margin-bottom:24px" onclick="go('sessions')">← Back to Sessions</button>
@@ -1955,7 +1956,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ NOTIFICATIONS ════════════════════════ -->
 <div id="pg-notifications" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link active nav-notif" onclick="go('notifications')">Notifications</button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link active nav-notif" onclick="go('notifications')">Notifications</button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap" style="max-width:720px">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px">
@@ -2031,7 +2032,7 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ MESSAGES ════════════════════════ -->
 <div id="pg-messages" class="page" style="overflow:hidden;height:100vh">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link active" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" onclick="go('profile')">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link active" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" onclick="go('profile')">A</div></div></nav>
   <div class="chat-layout">
     <div class="chat-sidebar">
       <div style="padding:20px;border-bottom:1px solid var(--rim)">
@@ -2103,21 +2104,21 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 
 <!-- ════════════════════════ PROFILE ════════════════════════ -->
 <div id="pg-profile" class="page">
-  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar" style="background:linear-gradient(135deg,#0ff,#4af);box-shadow:0 0 20px rgba(0,255,255,0.5)">A</div></div></nav>
+  <nav class="navbar" aria-label="Main navigation"><button class="nav-logo" onclick="go('landing')" aria-label="StudySync Home">StudySync</button><div class="nav-links"><button class="nav-link" onclick="go('dashboard')">Dashboard</button><button class="nav-link" onclick="go('matching')">Matching</button><button class="nav-link" onclick="go('sessions')">Sessions</button><button class="nav-link" onclick="go('connections')">Buddies</button><button class="nav-link" onclick="go('messages')">Messages</button><button class="nav-link nav-notif" onclick="go('notifications')">Notifications<span class="dot"></span></button></div><div class="nav-right"><div class="nav-avatar user-initial" style="background:linear-gradient(135deg,#0ff,#4af);box-shadow:0 0 20px rgba(0,255,255,0.5)">A</div></div></nav>
   <div class="pt-nav pb-60" style="position:relative;z-index:2">
     <div class="wrap" style="max-width:920px">
       <div class="profile-hero"><div class="profile-hero-ring"></div></div>
       <div style="padding:0 28px 0;margin-bottom:32px">
         <div style="display:flex;justify-content:space-between;align-items:flex-end">
           <div style="position:relative;display:inline-block">
-            <div class="avatar av-xl" style="background:linear-gradient(135deg,#0ff,#4af);margin-bottom:0">A</div>
+            <div class="avatar av-xl user-initial" style="background:linear-gradient(135deg,#0ff,#4af);margin-bottom:0">U</div>
             <div class="online-dot"></div>
           </div>
           <button class="btn btn-ghost" onclick="toast('Profile saved!','success')">✏️ Edit Profile</button>
         </div>
         <div style="margin-top:16px">
-          <div style="font-size:28px;font-weight:900;letter-spacing:-.5px">Ahmed Hassan</div>
-          <div style="color:var(--text2);font-size:14px;margin-top:2px">@ahmed.hassan · German International University · Year 3 CS</div>
+          <div style="font-size:28px;font-weight:900;letter-spacing:-.5px" id="profile-name">User Profile</div>
+          <div style="color:var(--text2);font-size:14px;margin-top:2px" id="profile-handle">@user.handle · University · Year</div>
           <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-top:10px;max-width:520px;font-weight:300">3rd year CS student passionate about algorithms, problem solving, and collaborative learning. Looking for motivated study partners!</p>
           <div style="display:flex;gap:32px;margin-top:14px">
             <div><div style="font-size:24px;font-weight:900;letter-spacing:-1px" class="t-neo">8</div><div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Buddies</div></div>
@@ -2143,18 +2144,18 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
               <div style="font-size:16px;font-weight:700;margin-bottom:20px">Personal Information</div>
               <div style="display:flex;flex-direction:column;gap:18px">
                 <div class="form-row">
-                  <div><label class="input-label">First Name<input class="input" value="Ahmed"/></label></div>
-                  <div><label class="input-label">Last Name<input class="input" value="Hassan"/></label></div>
+                  <div><label class="input-label">First Name<input class="input" id="edit-first-name" value="Ahmed"/></label></div>
+                  <div><label class="input-label">Last Name<input class="input" id="edit-last-name" value="Hassan"/></label></div>
                 </div>
                 <div class="form-row">
-                  <div><label class="input-label">Email<input class="input" value="ahmed@giu-uni.de"/></label></div>
-                  <div><label class="input-label">Phone<input class="input" value="+20 100 123 4567"/></label></div>
+                  <div><label class="input-label">Email<input class="input" id="edit-email" value="ahmed@giu-uni.de"/></label></div>
+                  <div><label class="input-label">Phone<input class="input" id="edit-phone" value="+20 100 123 4567"/></label></div>
                 </div>
                 <div class="form-row">
-                  <div><label class="input-label">University<input class="input" value="German International University"/></label></div>
-                  <div><label class="input-label">Year<select class="select"><option>Year 3</option></select></label></div>
+                  <div><label class="input-label">University<input class="input" id="edit-university" placeholder="University"/></label></div>
+                  <div><label class="input-label">Year<select class="select" id="edit-year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option></select></label></div>
                 </div>
-                <div><label class="input-label">Bio<textarea class="textarea">3rd year CS student passionate about algorithms and collaborative learning.</textarea></label></div>
+                <div><label class="input-label">Bio<textarea class="textarea" id="edit-bio" placeholder="Tell us about yourself..."></textarea></label></div>
                 <button class="btn btn-primary" onclick="saveProfileInfo()">Save Changes</button>
               </div>
             </div>
@@ -2233,5 +2234,76 @@ body:has([onclick]:hover) #cursor-ring{width:56px;height:56px;border-color:rgba(
 </div>
 
 <script src="app.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════════
+// CUSTOM CURSOR
+// ════════════════════════════════════════════════════════════════
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+
+if (cursor && cursorRing) {
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    cursorRing.style.left = e.clientX + 'px';
+    cursorRing.style.top = e.clientY + 'px';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+// THREE.JS BACKGROUND
+// ════════════════════════════════════════════════════════════════
+try {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  document.body.insertBefore(renderer.domElement, document.body.firstChild);
+  renderer.domElement.id = 'three-canvas';
+
+  const particles = [];
+  const particleCount = 100; // Reduced for better performance
+
+  for (let i = 0; i < particleCount; i++) {
+    const geometry = new THREE.SphereGeometry(0.5, 8, 8);
+    const material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color().setHSL(0.5 + Math.random() * 0.2, 0.8, 0.6),
+      transparent: true,
+      opacity: 0.3 + Math.random() * 0.3
+    });
+    const particle = new THREE.Mesh(geometry, material);
+    particle.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+    particle.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02);
+    particles.push(particle);
+    scene.add(particle);
+  }
+
+  camera.position.z = 50;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    particles.forEach(p => {
+      p.position.add(p.velocity);
+      if (p.position.x > 50) p.position.x = -50;
+      if (p.position.x < -50) p.position.x = 50;
+      if (p.position.y > 50) p.position.y = -50;
+      if (p.position.y < -50) p.position.y = 50;
+      if (p.position.z > 50) p.position.z = -50;
+      if (p.position.z < -50) p.position.z = 50;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+} catch (e) {
+  console.warn('Three.js failed to initialize:', e);
+}
+</script>
 </body>
 </html>

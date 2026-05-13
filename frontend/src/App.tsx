@@ -157,43 +157,38 @@ export default function App() {
 
   useEffect(() => {
     if (!bootStarted) return
-    const ctx = new AudioContext()
-    const master = ctx.createGain()
-    master.gain.value = 0.15
-    master.connect(ctx.destination)
+    let ctx: AudioContext | null = null
+    let source: AudioBufferSourceNode | null = null
+    let cancelled = false
 
-    const oscs: OscillatorNode[] = []
-    const notes = [261.63, 329.63, 392, 440, 523.25, 587.33, 659.25]
-    notes.forEach((freq, i) => {
-      const o = ctx.createOscillator()
-      const g = ctx.createGain()
-      o.type = i % 2 === 0 ? 'triangle' : 'sine'
-      o.frequency.value = freq
-      g.gain.value = 0.03 + Math.random() * 0.02
-      o.connect(g)
-      g.connect(master)
-      o.start()
-      oscs.push(o)
-    })
+    const play = async () => {
+      ctx = new AudioContext()
+      const res = await fetch('/assets/studysync/retro-jazz.mp3')
+      const buf = await res.arrayBuffer()
+      const audio = await ctx.decodeAudioData(buf)
+      if (cancelled) { ctx.close(); return }
+      const gain = ctx.createGain()
+      gain.gain.value = 0.4
+      source = ctx.createBufferSource()
+      source.buffer = audio
+      source.loop = true
+      source.connect(gain)
+      gain.connect(ctx.destination)
+      source.start(0)
+    }
 
-    // slow LFO modulation for movement
-    const lfo = ctx.createOscillator()
-    lfo.frequency.value = 0.15 + Math.random() * 0.1
-    const lfoGain = ctx.createGain()
-    lfoGain.gain.value = 5
-    lfo.connect(lfoGain)
-    lfoGain.connect(oscs[0].frequency)
-    lfo.start()
-
+    play()
     audioRef.current = {
       stop: () => {
-        oscs.forEach(o => o.stop())
-        lfo.stop()
-        ctx.close()
+        cancelled = true
+        source?.stop()
+        ctx?.close()
       },
     }
     return () => {
-      audioRef.current?.stop()
+      cancelled = true
+      source?.stop()
+      ctx?.close()
     }
   }, [bootStarted])
 

@@ -1,9 +1,11 @@
 services:
   - type: web
     name: studysync
-    env: static
+    runtime: node
+    repo: https://github.com/HusseinSelim-1977/StudySync-1
+    plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
-        value: http://localhost:4000
+        value: https://studysync-gateway.onrender.com

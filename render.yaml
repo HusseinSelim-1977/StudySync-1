@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: studysync-gateway
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.gateway
+    envVars:
+      - key: JWT_SECRET
+        value: supersecret
+      - key: KAFKA_BROKER
+        value: kafka:9092
+      - key: MESSAGING_SERVICE_URL
+        value: http://messaging-service:4007
+
+  - type: web
+    name: studysync-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://studysync-gateway.onrender.com

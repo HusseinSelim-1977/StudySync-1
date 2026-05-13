@@ -1,0 +1,10 @@
+node_modules/
+frontend/dist/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+frontend/Audio/
+frontend/public/assets/studysync/retro-jazz.mp3

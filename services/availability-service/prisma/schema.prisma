@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AVAILABILITY_DB_URL")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model AvailabilitySlot {
+  id        String     @id @default(uuid())
+  userId    String
+  dayOfWeek DayOfWeek
+  startTime String
+  endTime   String
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+
+  // prevents exact duplicates
+  @@unique([userId, dayOfWeek, startTime, endTime])
+}

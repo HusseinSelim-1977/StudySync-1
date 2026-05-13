@@ -1,28 +1,69 @@
-# How To Run
+# StudySync — How to Run
 
-## Prerequisites
+## 🐳 Share via Docker (1 command)
+
+### Prerequisites
 
 - Docker + Docker Compose
-- Node.js 20+
-- All `.env` files must have valid credentials (NeonDB, JWT secret, Kafka brokers)
+- **NeonDB databases** (7 databases) — create free at [neon.tech](https://neon.tech)
 
-## Quick Start
+### 1. Clone the repo
 
-### 1. Backend (Docker Compose)
+```bash
+git clone https://github.com/HusseinSelim-1977/StudySync-1.git
+cd StudySync-1
+```
+
+### 2. Set up `.env` files
+
+The real `.env` files contain NeonDB credentials and are **not in git** (security).
+
+**Option A — Share your existing DB access** (fastest):  
+Send the recipient the 9 `.env` files from your working copy:
+- `gateway/.env`
+- `shared/.env`
+- `services/*/.env`
+
+They drop them into the same paths and skip to step 3.
+
+**Option B — Recipient creates their own NeonDB**:  
+Each service needs its own PostgreSQL database on Neon:
+
+| Service | DB Name |
+|---------|---------|
+| user-service | `userdb` |
+| profile-service | `profiledb` |
+| availability-service | `availabilitydb` |
+| matching-service | `matchingdb` |
+| session-service | `sessiondb` |
+| notification-service | `notificationdb` |
+| messaging-service | `messagingdb` |
+
+Copy each `.env.example` to `.env` and fill in the NeonDB connection strings:
+
+```bash
+cp gateway/.env.example gateway/.env
+cp shared/.env.example shared/.env
+for d in services/*/; do cp "$d.env.example" "$d.env"; done
+```
+
+Then edit each `.env` with the real NeonDB URL from the Neon dashboard.
+
+### 3. Start everything
 
 ```bash
 docker compose build
 docker compose up -d
 ```
 
-This starts 11 containers:
+This starts **12 containers**:
 
 | Container | Role | Port |
 |---|---|---|
 | `zookeeper` | Kafka coordinator | — |
 | `kafka` | Message broker | `9092` |
 | `kafka-ui` | Kafka admin UI | `8080` |
-| `gateway` | GraphQL API gateway | **`4000`** |
+| `gateway` | GraphQL API gateway | `4000` |
 | `user-service` | Auth & users | — |
 | `profile-service` | Study profiles | — |
 | `availability-service` | Time slots | — |
@@ -30,76 +71,42 @@ This starts 11 containers:
 | `session-service` | Study sessions | — |
 | `notification-service` | Push notifications | — |
 | `messaging-service` | Chat (HTTP) | `4007` |
+| `frontend` | React + Vite app | `5173` |
 
-Each service auto-runs `npx prisma db push` on startup to sync its schema to NeonDB.
+Each service auto-runs `npx prisma db push` on startup to sync its schema.
 
-### 2. Wait for readiness
+### 4. Open the app
 
-Kafka takes ~20s for leader elections. Confirm everything is up:
+Go to **http://localhost:5173**
 
-```bash
-docker compose ps                     # all 11 should show "Up"
-curl http://localhost:4000/ \
-  -H 'Content-Type: application/json' \
-  -d '{"query":"{ __typename }"}'      # should return {"data":{"__typename":"Query"}}
-```
-
-### 3. Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Vite dev server starts at `http://localhost:5173`. The frontend connects to the GraphQL gateway at `http://localhost:4000/` via Apollo Client.
-
-### 4. Seed data (optional)
+### 5. Seed data (optional)
 
 ```bash
 node scripts/seed.js
 ```
 
-Registers 6 example users (Emma, Omar, Lena, Ali, Sara, Yuki) with courses, topics, study preferences, availability slots, buddy requests, and a sample study session. Login credentials are printed on completion.
+Creates 6 demo users with profiles, availability, buddy requests, and a sample session.
 
-### 5. Verify end-to-end
+### 6. Verify
 
 ```bash
 python3 /tmp/e2e_test.py
 ```
 
-Runs 56 integration tests through the gateway (auth, profile, availability, matching, sessions, buddy requests, notifications, messaging).
+64 integration tests covering auth, profile, availability, matching, sessions, buddy requests, notifications, messaging.
+
+---
 
 ## URLs
 
 | Service | URL |
 |---|---|
-| GraphQL Gateway | `http://localhost:4000` |
-| Kafka UI | `http://localhost:8080` |
-| Frontend (Vite) | `http://localhost:5173` |
+| Frontend | http://localhost:5173 |
+| GraphQL Gateway | http://localhost:4000 |
+| Kafka UI | http://localhost:8080 |
 
 ## Troubleshooting
 
-**Kafka connection errors on startup** — Normal. Services start before Kafka is ready and auto-retry. Check `docker compose logs <service>` — after a few retries they connect.
-
-**Port conflicts** — Change host ports in `docker-compose.yml` (e.g. `"4000:4000"` → `"4001:4000"`).
-
-**Database schema out of sync** — The container CMD already runs `npx prisma db push`. To force a manual sync:
-
-```bash
-docker compose exec <service> npx prisma db push
-```
-
-**Rebuild after code changes**:
-
-```bash
-docker compose build <service>
-docker compose up -d <service>
-```
-
-Or rebuild everything:
-
-```bash
-docker compose build
-docker compose up -d
-```
+- **Kafka connection errors** — Normal on first startup. Services auto-retry. Wait ~20s.
+- **Port conflicts** — Change host ports in `docker-compose.yml`.
+- **Rebuild after changes** — `docker compose build <service> && docker compose up -d <service>`

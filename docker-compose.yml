@@ -155,3 +155,15 @@ services:
       - ./services/messaging-service/.env
     depends_on:
       - kafka
+
+  # ---------------- FRONTEND ----------------
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway

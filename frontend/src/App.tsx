@@ -158,36 +158,44 @@ export default function App() {
   useEffect(() => {
     if (!bootStarted) return
     let ctx: AudioContext | null = null
-    let source: AudioBufferSourceNode | null = null
+    let audioEl: HTMLAudioElement | null = null
     let cancelled = false
-
+    
     const play = async () => {
+      // Create audio element — browser handles range requests automatically
+      audioEl = new Audio('/assets/studysync/retro-jazz.mp3')
+      audioEl.loop = true
+      audioEl.preload = 'metadata' // only fetch duration on load, not the whole file
+    
+      // Wire through AudioContext for gain control
       ctx = new AudioContext()
-      const res = await fetch('/assets/studysync/retro-jazz.mp3')
-      const buf = await res.arrayBuffer()
-      const audio = await ctx.decodeAudioData(buf)
-      if (cancelled) { ctx.close(); return }
+      const source = ctx.createMediaElementSource(audioEl)
       const gain = ctx.createGain()
       gain.gain.value = 0.4
-      source = ctx.createBufferSource()
-      source.buffer = audio
-      source.loop = true
       source.connect(gain)
       gain.connect(ctx.destination)
-      source.start(0)
+    
+      if (cancelled) { ctx.close(); return }
+    
+      // Starts playing immediately — no waiting for full download
+      await audioEl.play()
     }
-
+    
     play()
+    
     audioRef.current = {
       stop: () => {
         cancelled = true
-        source?.stop()
+        audioEl?.pause()
+        audioEl?.remove()
         ctx?.close()
       },
     }
+    
     return () => {
       cancelled = true
-      source?.stop()
+      audioEl?.pause()
+      audioEl?.remove()
       ctx?.close()
     }
   }, [bootStarted])

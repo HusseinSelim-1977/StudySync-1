@@ -20,9 +20,9 @@ export function BakedGLTF({ glbPath, texturePath, scale = 1, position, rotation 
 
     const clone = scene.clone(true)
     clone.traverse((child) => {
-      if (child.isMesh) {
-        child.material = new THREE.MeshBasicMaterial({ map: texture })
-      }
+      if (!(child instanceof THREE.Mesh)) return
+
+      child.material = new THREE.MeshBasicMaterial({ map: texture })
     })
     return clone
   }, [scene, texture])

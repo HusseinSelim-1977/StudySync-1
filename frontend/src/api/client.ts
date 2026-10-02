@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 

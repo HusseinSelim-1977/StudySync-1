@@ -3,9 +3,15 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useStore } from '../store'
 
-const CLICKABLES = [
-  { position: [0, 0.317, 0.05], scale: [0.5, 0.4, 0.2], view: 'monitor' as const },
-  { position: [0, -0.15, 0], scale: [0.8, 0.05, 0.5], view: 'desk' as const },
+type Clickable = {
+  position: [number, number, number]
+  scale: [number, number, number]
+  view: 'monitor' | 'desk'
+}
+
+const CLICKABLES: Clickable[] = [
+  { position: [0, 0.317, 0.05], scale: [0.5, 0.4, 0.2], view: 'monitor' },
+  { position: [0, -0.15, 0], scale: [0.8, 0.05, 0.5], view: 'desk' },
 ]
 
 export function Clickables() {
